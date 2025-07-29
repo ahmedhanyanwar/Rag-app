@@ -90,7 +90,6 @@ async def upload_data(
         }
     )
 
-
 @data_router.post("/process/{project_id}")
 async def process_endpoint(request: Request, project_id: str, process_request: ProcessRequest):
     chunk_size = process_request.chunk_size
@@ -225,5 +224,50 @@ async def process_endpoint(request: Request, project_id: str, process_request: P
             "signal": ResponseSignal.PROCESSING_SUCCESS.value,
             "inserted_chunks": no_records,
             "processed_file": no_files
+        }
+    )
+
+@data_router.get("/delete/{project_id}")
+async def delete_project(request: Request,project_id: str):
+    project_model = ProjectModel(request.app.db_client)
+    project = await project_model.get_or_create_project(project_id)
+    await project_model.delete_project(project_id)
+    
+    chunk_model = ChunkModel(request.app.db_client)
+    await chunk_model.delete_chunks_by_project_id(chunk_project_id=project.id)
+    
+    asset_model = AssetModel(request.app.db_client)
+    await asset_model.delete_assets_by_project_id(asset_project_id=project.id)
+
+    project_path = DataController().get_project_path(project_id)
+    for item in os.listdir(project_path):
+        item_path = os.path.join(project_path, item)
+        os.remove(item_path)
+
+    return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content={
+            "single": f"Delete project id: {project_id}"
+        }
+    )
+
+@data_router.get("/reset_all")
+async def delete_project(request: Request):
+    project_model = ProjectModel(request.app.db_client)
+    await project_model.drop_projects_collection()
+    chunk_model = ChunkModel(request.app.db_client)
+    await chunk_model.drop_chunks_collection()
+    asset_model = AssetModel(request.app.db_client)
+    await asset_model.drop_assets_collection()
+
+    file_path = DataController().files_dir
+    for item in os.listdir(file_path):
+        item_path = os.path.join(file_path, item)
+        shutil.rmtree(item_path)
+
+    return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content={
+            "single": "Restart the app."
         }
     )
