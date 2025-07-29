@@ -24,6 +24,8 @@ async def lifespan(app: FastAPI):
     app.mongo_conn = AsyncIOMotorClient(settings.MONGODB_URL)
     app.db_client = app.mongo_conn[settings.MONGODB_DATABASE]
 
+    yield  # App runs here
+
     # ------------------ Shutdown ------------------ #
     app.mongo_conn.close()
     app.vectordb_client.disconnect()
