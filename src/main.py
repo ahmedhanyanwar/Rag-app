@@ -1,8 +1,6 @@
 from fastapi import FastAPI
 
+from routes import base
+
 app = FastAPI()
-
-
-@app.get("/")
-async def welcome():
-    return "Welcome to my Rag-app"
+app.include_router(base.base_router)
