@@ -6,8 +6,8 @@ A lightweight Retrieval-Augmented Generation (RAG) application built with FastAP
 
 ## 🧰 Requirements
 
-- Python 3.10 or later
-- `libpq-dev`, `gcc`, `python3-dev` (for compilation of certain dependencies)
+- Python 3.10 or later  
+- `libpq-dev`, `gcc`, `python3-dev` (for building certain Python packages)
 
 ---
 
@@ -32,7 +32,7 @@ A lightweight Retrieval-Augmented Generation (RAG) application built with FastAP
 
 ## 📦 System Package Installation (Ubuntu/Debian)
 
-Make sure the following system-level dependencies are installed:
+Install system-level dependencies:
 
 ```bash
 sudo apt update
@@ -55,17 +55,17 @@ sudo apt install libpq-dev gcc python3-dev
    cp env.example .env
    ```
 
-   Then edit the `.env` file and set your environment variables. For example:
+   Then open the `.env` file and configure required variables, e.g.:
 
-   ```
-   OPENAI_API_KEY=your_api_key_here
+   ```env
+   OPENAI_API_KEY=your_openai_key
    ```
 
 ---
 
 ## 🚀 Run the FastAPI Server
 
-Start the development server on port `5000`:
+Start the development server:
 
 ```bash
 uvicorn main:app --reload --host 0.0.0.0 --port 5000
@@ -73,9 +73,45 @@ uvicorn main:app --reload --host 0.0.0.0 --port 5000
 
 ---
 
-## 🧼 Optional: Make Terminal Prompt Cleaner
+## 🐳 Docker Setup (Optional)
 
-To make your terminal prompt cleaner and more readable:
+Run the app with Docker (for local development)
+
+1. **Install Docker Desktop**  
+   - [Download Docker](https://www.docker.com/products/docker-desktop/) and ensure it's running.
+
+2. **Navigate to the Docker setup folder**
+
+   ```bash
+   cd docker
+   ```
+
+3. **Copy and configure environment variables**
+
+   ```bash
+   cp env.example .env
+   ```
+
+   Then edit `.env` to set your Docker container values:
+
+   ```env
+   MONGO_INITDB_ROOT_USERNAME=your_username
+   MONGO_INITDB_ROOT_PASSWORD=your_password
+   ```
+
+4. **Run Docker Compose**
+
+   ```bash
+   docker compose up --build
+   ```
+
+> 📌 Ensure ports in your Docker Compose file do not conflict with other services.
+
+---
+
+## 🧼 Optional: Clean Terminal Prompt
+
+Make the terminal prompt more readable:
 
 ```bash
 export PS1="\[\033[01;32m\]\u@\h:\w\n\[\033[00m\]\$ "
